@@ -103,24 +103,53 @@ function getUrlParams() {
 // === Timer ===
 function startTimer(seconds) {
     const timerDisplay = document.getElementById("timer");
-    let timeLeft = seconds;
+    // Save the start time in persistent storage (using ISO string)
+    const startTime = new Date().toISOString();
+    localStorage.setItem('timerStart', startTime);
+    localStorage.setItem('gameDuration', seconds);
 
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+
+    // Compute timeLeft based on the stored start time
     const updateTimer = () => {
-        const minutes = Math.floor(timeLeft / 60);
-        const secs = timeLeft % 60;
-        timerDisplay.textContent = `${minutes}:${secs.toString().padStart(2, '0')}`;
-        timeLeft--;
+        const storedStartTime = new Date(localStorage.getItem('timerStart'));
+        const now = new Date();
+        // Calculate seconds elapsed
+        const secondsElapsed = Math.floor((now - storedStartTime) / 1000);
+        const remainingTime = seconds - secondsElapsed;
 
-        if (timeLeft < 0) {
-            clearInterval(timerInterval);
+        if (remainingTime <= 0) {
             timerDisplay.textContent = "0:00";
-            endRound();
+            clearInterval(timerInterval);
+            endRound(); // Round ends when time runs out.
+        } else {
+            const minutes = Math.floor(remainingTime / 60);
+            const secs = remainingTime % 60;
+            timerDisplay.textContent = `${minutes}:${secs.toString().padStart(2, '0')}`;
         }
     };
 
     updateTimer();
     timerInterval = setInterval(updateTimer, 1000);
 }
+
+window.addEventListener("load", () => {
+    const storedStartTime = localStorage.getItem('timerStart');
+    const gameDuration = parseInt(localStorage.getItem('gameDuration'), 10);
+    if (storedStartTime && gameDuration) {
+        const elapsed = Math.floor((new Date() - new Date(storedStartTime)) / 1000);
+        if (elapsed < gameDuration) {
+            startTimer(gameDuration); // This will recalculate based on stored start time.
+        } else {
+            // Time is up—handle the round completion
+            document.getElementById("timer").textContent = "0:00";
+            endRound();
+        }
+    }
+});
 
 function endRound() {
     // If clustering is enabled, start clustering phase
