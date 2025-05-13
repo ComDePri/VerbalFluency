@@ -205,6 +205,7 @@ function endGame() {
 
 function startClustering() {
     // Hide the input area and timer during clustering
+    document.getElementById("submit-clusters").disabled = false;
     document.getElementById("input-area").style.display = "none";
     document.getElementById("timer").style.display = "none";
 
