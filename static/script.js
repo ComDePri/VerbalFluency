@@ -137,14 +137,20 @@ function startTimer(seconds) {
 }
 
 window.addEventListener("load", () => {
-    const storedStartTime = localStorage.getItem('timerStart');
-    const gameDuration = parseInt(localStorage.getItem('gameDuration'), 10);
-    if (storedStartTime && gameDuration) {
-        const elapsed = Math.floor((new Date() - new Date(storedStartTime)) / 1000);
-        if (elapsed < gameDuration) {
-            startTimer(gameDuration); // This will recalculate based on stored start time.
+    const storedStart = localStorage.getItem("timerStart");
+    const storedDuration = localStorage.getItem("timerDuration");
+
+    if (storedStart && storedDuration) {
+        const startTime = parseInt(storedStart);
+        const duration = parseInt(storedDuration);
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const remaining = duration - elapsed;
+
+        if (remaining > 0) {
+            startTimer(remaining);
         } else {
-            // Time is up—handle the round completion
+            localStorage.removeItem("timerStart");
+            localStorage.removeItem("timerDuration");
             document.getElementById("timer").textContent = "0:00";
             endRound();
         }
