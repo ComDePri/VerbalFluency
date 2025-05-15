@@ -323,6 +323,7 @@ function getRedirectionUrl() {
 
 function getProlificId(){
     const urlParams = new URL(location.href).searchParams;
+    console.log("PROLIFIC:" + urlParams.get('PROLIFIC_PID'));
     return urlParams.get('PROLIFIC_PID');
 }
 
