@@ -67,7 +67,8 @@ function setupInputEvents() {
                 startedTyping = true;
             }
 
-            if (e.key === "Enter" && input.value.trim()) {
+            if ((e.key === "Enter" || e.key === "Tab") && input.value.trim()) {
+                e.preventDefault();
                 data.push({
                     round: currentRound,
                     index: index,
