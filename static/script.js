@@ -221,6 +221,9 @@ function startClustering() {
     // Add each item from the data to the clustering list
     console.log("data:", data);
 
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+
     data.forEach((item, index) => {
         const li = document.createElement("li");
         li.textContent = `${index + 1}. ${item.text}`;
