@@ -300,6 +300,21 @@ function submitClusters(){
         finalClusters = [{clusterId: null, items: data}];
     }
 
+    // Sort and renumber clusters by the earliest item index in each cluster
+    // this is so we won't mess with cluster color logic, but save a sequential indexing of the groups
+    if (enableClustering) {
+        finalClusters.sort((a, b) => {
+            const minA = Math.min(...a.items.map(item => item.index));
+            const minB = Math.min(...b.items.map(item => item.index));
+            return minA - minB;
+        });
+
+        finalClusters.forEach((cluster, i) => {
+            cluster.clusterId = i + 1;
+        });
+    }
+
+
     const exportData = {
         RoundIndex: currentRound,
         category: category,
