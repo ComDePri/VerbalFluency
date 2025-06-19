@@ -67,6 +67,11 @@ function setupInputEvents() {
                 startedTyping = true;
             }
 
+            if (e.key === "Tab" && !input.value.trim()) {
+                e.preventDefault();
+                return; // Do nothing
+            }
+
             if ((e.key === "Enter" || e.key === "Tab") && input.value.trim()) {
                 e.preventDefault();
                 data.push({
