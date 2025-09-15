@@ -8,6 +8,7 @@ const inputsPerRound = 30;
 const colors = ["#fce4ec", "#e0f2f1", "#f3e5f5", "#f0f4c3", "#e3f2fd", "#ffe0b2", "#c8e6c9", "#f8bbd0",
     "#b2dfdb", "#e1bee7", "#dcedc8", "#bbdefb", "#fff3e0", "#e6ee9c", "#e8f5e9", "#f3f5f7", "#f5f5f5"];
 const categories = ["Animals", "Furniture", "Electronics", "Plants"]
+const TIMESTAMP = Date.now();
 let category;
 let currentClusterColorIndex = 1;
 let clustered = [];
@@ -323,6 +324,7 @@ function submitClusters(){
     const exportData = {
         RoundIndex: currentRound,
         category: category,
+        raw: data.map(it => ({ ...it })),
         clusters: finalClusters
     };
 
@@ -367,7 +369,7 @@ function uploadDataWithRetry(lastTry=false, endTest=true ,retryCount = 5, delay 
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
-                    "subject_id": `${subject}`,
+                    "subject_id": `${subject}_${TIMESTAMP}`,
                     "bucket": `${BUCKET_NAME}`,
                     "exp_data": JSON.stringify(JSON.stringify(results, null, 2))
                 }),
