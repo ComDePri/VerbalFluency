@@ -60,7 +60,7 @@ function setupInputEvents() {
     }
 
     inputs.forEach((input, index) => {
-        let isDefaultTime = false; // Use a proper variable name and boolean values
+        let isDefaultTime = true; // Use a proper variable name and boolean values
 
         input.addEventListener("focus", () => {
             if (!input.dataset.startTyping) {
