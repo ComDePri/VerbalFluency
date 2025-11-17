@@ -60,12 +60,17 @@ function setupInputEvents() {
     }
 
     inputs.forEach((input, index) => {
-        let startedTyping = false;
+        // Initialize startTyping timestamp immediately when input becomes active
+        input.addEventListener("focus", () => {
+            if (!input.dataset.startTyping) {
+                input.dataset.startTyping = new Date().toISOString();
+            }
+        });
 
         input.addEventListener("keydown", (e) => {
-            if (!startedTyping && e.key.length === 1) {
+            // Ensure startTyping is set (backup for any edge cases)
+            if (!input.dataset.startTyping) {
                 input.dataset.startTyping = new Date().toISOString();
-                startedTyping = true;
             }
 
             if (e.key === "Tab" && !input.value.trim()) {
@@ -75,11 +80,13 @@ function setupInputEvents() {
 
             if ((e.key === "Enter" || e.key === "Tab") && input.value.trim()) {
                 e.preventDefault();
+
+                // startTyping is guaranteed to exist now
                 data.push({
                     round: currentRound,
                     index: index,
                     text: input.value.trim(),
-                    startTyping: input.dataset.startTyping || null,
+                    startTyping: input.dataset.startTyping, // No fallback needed
                     enterPressed: new Date().toISOString()
                 });
 
